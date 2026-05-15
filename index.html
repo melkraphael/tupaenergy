@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tupã Energy | Monte seu pedido</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Arial,Helvetica,sans-serif;background:#070014;color:#fff}
+    .page{min-height:100vh;background:radial-gradient(circle at top left,rgba(130,40,255,.35),transparent 35%),linear-gradient(180deg,#120020,#05000c)}
+    .poster-wrap{max-width:920px;margin:0 auto;padding:14px 12px 38px}
+    .poster{width:100%;display:block;border-radius:26px;box-shadow:0 30px 90px rgba(0,0,0,.6)}
+    .builder{max-width:920px;margin:0 auto;padding:0 14px 145px}
+    .box{background:linear-gradient(145deg,#2c004e,#0d001b);border:1px solid rgba(167,65,255,.5);border-radius:30px;padding:26px;box-shadow:0 25px 80px rgba(0,0,0,.55)}
+    h1{font-size:clamp(2rem,6vw,4rem);line-height:.95;text-transform:uppercase;margin-bottom:10px}
+    .green{color:#8dff29}
+    .subtitle{color:#eadfff;line-height:1.6;margin-bottom:22px;font-size:1.05rem}
+    .step{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.14)}
+    .step h2{font-size:1.05rem;margin-bottom:14px;text-transform:uppercase}
+    .options{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .checks{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    label.opt{display:block;cursor:pointer}
+    label.opt input{position:absolute;opacity:0}
+    label.opt span{
+      min-height:58px;display:flex;align-items:center;justify-content:center;gap:8px;
+      text-align:center;padding:13px 16px;border-radius:18px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.17);font-weight:800;flex-wrap:wrap
+    }
+    label.opt small{font-size:.82rem;color:#d8ccff;white-space:nowrap}
+    label.opt input:checked + span{background:linear-gradient(135deg,#7b24ff,#8dff29);color:#15001f;box-shadow:0 0 24px rgba(141,255,41,.22)}
+    label.opt input:checked + span small{color:#15001f}
+    .hidden{display:none!important}
+    .qty{display:flex;align-items:center;gap:12px}
+    .qty button{width:48px;height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:1.4rem;font-weight:900;cursor:pointer}
+    .qty input{width:76px;height:48px;text-align:center;border-radius:16px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-size:1.1rem;font-weight:900}
+    textarea{width:100%;min-height:90px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;padding:16px;font-size:1rem}
+    .add-btn,.send,.clear-btn{margin-top:18px;width:100%;min-height:58px;border:0;border-radius:22px;font-size:1rem;font-weight:950;text-transform:uppercase;cursor:pointer}
+    .add-btn,.send{background:linear-gradient(135deg,#8dff29,#48ff90);color:#170022}
+    .clear-btn{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18)}
+    .cart{margin-top:24px;padding:20px;border-radius:24px;background:rgba(0,0,0,.28);border:1px solid rgba(141,255,41,.28);color:#eee7ff;line-height:1.7}
+    .cart-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .cart-title h2{font-size:1.7rem}
+    .total{font-size:1.9rem;font-weight:950;color:#8dff29;white-space:nowrap}
+    .cart-item{padding:16px 0;border-top:1px solid rgba(255,255,255,.12)}
+    .cart-item:first-of-type{border-top:0}
+    .cart-item strong{display:block;font-size:1.05rem;margin-bottom:5px}
+    .cart-item p{color:#e9ddff;margin:3px 0}
+    .remove{margin-top:10px;border:1px solid rgba(255,90,90,.45);background:rgba(255,50,80,.14);color:#ffb3c0;border-radius:14px;padding:10px 14px;font-weight:900;cursor:pointer}
+    .empty{color:#cfc2eb;padding:8px 0}
+    .float{position:fixed;left:14px;right:14px;bottom:14px;z-index:50;display:none;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(135deg,#8dff29,#48ff90);color:#13001f;text-decoration:none;font-weight:950;padding:15px 18px;border-radius:999px;box-shadow:0 16px 50px rgba(141,255,41,.3)}
+    .float.show{display:flex}
+    .cart-mini{font-size:.95rem}.cart-mini b{display:block;font-size:1.2rem}
+    @media(max-width:768px){
+      .poster-wrap{padding:0 0 28px}.poster{border-radius:0;box-shadow:none}.builder{padding:0 12px 130px}.box{padding:22px;border-radius:26px}.options,.checks{grid-template-columns:1fr}
+      label.opt span{justify-content:center;gap:10px}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="poster-wrap">
+      <img class="poster" src="tupa-energy-poster.png" alt="Tupã Energy">
+    </section>
+
+    <section class="builder" id="montar-pedido">
+      <div class="box">
+        <h1>Monte seu <span class="green">pedido</span></h1>
+        <p class="subtitle">Escolha o produto, adicione ao carrinho e finalize tudo no WhatsApp.</p>
+
+        <div class="step">
+          <h2>1. Escolha o produto</h2>
+          <div class="options">
+            <label class="opt"><input type="radio" name="produto" data-price="12" value="Guaraná especial 400ml"><span>⚡ Guaraná especial <small>R$ 12,00</small></span></label>
+            <label class="opt"><input type="radio" name="produto" data-price="15" value="Açaí natural 400ml"><span>🫐 Açaí natural <small>R$ 15,00</small></span></label>
+            <label class="opt"><input type="radio" name="produto" data-price="12" value="Vitaminada 400ml"><span>🥤 Vitaminada <small>R$ 12,00</small></span></label>
+          </div>
+        </div>
+
+        <div class="step hidden" id="saborStep">
+          <h2>2. Sabor da vitaminada</h2>
+          <div class="options">
+            <label class="opt"><input type="radio" name="sabor" value="Abacate"><span>Abacate</span></label>
+            <label class="opt"><input type="radio" name="sabor" value="Abacate + Mamão + Banana"><span>Abacate + Mamão + Banana</span></label>
+            <label class="opt"><input type="radio" name="sabor" value="Mamão + Banana"><span>Mamão + Banana</span></label>
+            <label class="opt"><input type="radio" name="sabor" value="Banana + Aveia"><span>Banana + Aveia</span></label>
+            <label class="opt"><input type="radio" name="sabor" value="Mamão + Aveia"><span>Mamão + Aveia</span></label>
+            <label class="opt"><input type="radio" name="sabor" value="Banana"><span>Banana</span></label>
+          </div>
+        </div>
+
+        <div class="step hidden" id="extrasStep">
+          <h2>3. Acompanhamentos</h2>
+          <div class="checks">
+            <label class="opt"><input type="checkbox" name="extra" data-price="2" value="Leite condensado"><span>Leite condensado <small>+ R$ 2,00</small></span></label>
+            <label class="opt"><input type="checkbox" name="extra" data-price="2" value="Farinha de tapioca"><span>Farinha de tapioca <small>+ R$ 2,00</small></span></label>
+            <label class="opt"><input type="checkbox" name="extra" data-price="2" value="Granola"><span>Granola <small>+ R$ 2,00</small></span></label>
+            <label class="opt"><input type="checkbox" name="extra" data-price="2" value="Amendoim granulado"><span>Amendoim granulado <small>+ R$ 2,00</small></span></label>
+            <label class="opt"><input type="checkbox" name="extra" data-price="2" value="Leite em pó"><span>Leite em pó <small>+ R$ 2,00</small></span></label>
+            <label class="opt"><input type="checkbox" name="extra" data-price="0" value="Leite desnatado"><span>Leite desnatado <small>Sem adicional</small></span></label>
+          </div>
+        </div>
+
+        <div class="step hidden" id="qtyStep">
+          <h2>4. Quantidade</h2>
+          <div class="qty">
+            <button type="button" id="menos">−</button>
+            <input id="qty" type="number" min="1" value="1">
+            <button type="button" id="mais">+</button>
+          </div>
+        </div>
+
+        <div class="step hidden" id="obsStep">
+          <h2>5. Observação</h2>
+          <textarea id="obs" placeholder="Ex: sem açúcar, pouco gelo, mais leite em pó..."></textarea>
+          <button class="add-btn" id="addToCart">Adicionar ao carrinho</button>
+        </div>
+
+        <div class="cart" id="cart">
+          <div class="cart-title">
+            <h2>🛒 Carrinho</h2>
+            <div class="total" id="total">R$ 0,00</div>
+          </div>
+          <div id="cartItems"><p class="empty">Seu carrinho está vazio.</p></div>
+          <button class="send hidden" id="send">Finalizar pedido no WhatsApp</button>
+          <button class="clear-btn hidden" id="clearCart">Limpar carrinho</button>
+        </div>
+      </div>
+    </section>
+
+    <a href="#cart" class="float" id="floatCart">
+      <span>🛒 Ver carrinho</span>
+      <span class="cart-mini">Total <b id="floatTotal">R$ 0,00</b></span>
+    </a>
+  </main>
+
+  <script>
+    var WHATSAPP_NUMBER = "5592981427056";
+    var cart = [];
+
+    function money(n){ return n.toLocaleString("pt-BR",{style:"currency",currency:"BRL"}); }
+    function selectedProduct(){ return document.querySelector('input[name="produto"]:checked'); }
+    function radioValue(name){ var s=document.querySelector('input[name="'+name+'"]:checked'); return s?s.value:""; }
+    function checkedExtras(){
+      var items=document.querySelectorAll('input[name="extra"]:checked'), values=[];
+      for(var i=0;i<items.length;i++){ values.push({name:items[i].value, price:Number(items[i].dataset.price||0)}); }
+      return values;
+    }
+    function currentItemTotal(){
+      var p=selectedProduct(); if(!p) return 0;
+      var base=Number(p.dataset.price||0);
+      var extras=checkedExtras().reduce(function(sum,item){return sum+item.price},0);
+      var qty=Number(document.getElementById("qty").value||1);
+      return (base+extras)*qty;
+    }
+    function showAfterStart(){
+      var p=selectedProduct(), started=!!p;
+      document.getElementById("extrasStep").classList.toggle("hidden",!started);
+      document.getElementById("qtyStep").classList.toggle("hidden",!started);
+      document.getElementById("obsStep").classList.toggle("hidden",!started);
+      var isVitamin=p && p.value.indexOf("Vitaminada")>=0;
+      document.getElementById("saborStep").classList.toggle("hidden",!isVitamin);
+    }
+    function resetForm(){
+      var products=document.querySelectorAll('input[name="produto"]');
+      for(var i=0;i<products.length;i++) products[i].checked=false;
+      var sabores=document.querySelectorAll('input[name="sabor"]');
+      for(var j=0;j<sabores.length;j++) sabores[j].checked=false;
+      var extras=document.querySelectorAll('input[name="extra"]');
+      for(var k=0;k<extras.length;k++) extras[k].checked=false;
+      document.getElementById("qty").value=1;
+      document.getElementById("obs").value="";
+      showAfterStart();
+    }
+    function addToCart(){
+      var p=selectedProduct();
+      if(!p){ alert("Escolha um produto primeiro."); return; }
+      var isVitamin=p.value.indexOf("Vitaminada")>=0;
+      var sabor=radioValue("sabor");
+      if(isVitamin && !sabor){ alert("Escolha o sabor da vitaminada."); return; }
+      var extras=checkedExtras();
+      var qty=Number(document.getElementById("qty").value||1);
+      var obs=document.getElementById("obs").value.trim();
+      cart.push({
+        produto:p.value,
+        sabor:isVitamin?sabor:"",
+        extras:extras,
+        qty:qty,
+        obs:obs,
+        total:currentItemTotal()
+      });
+      resetForm();
+      renderCart();
+      document.getElementById("cart").scrollIntoView({behavior:"smooth",block:"start"});
+    }
+    function removeItem(index){
+      cart.splice(index,1);
+      renderCart();
+    }
+    function clearCart(){
+      cart=[];
+      renderCart();
+    }
+    function cartTotal(){
+      return cart.reduce(function(sum,item){return sum+item.total},0);
+    }
+    function renderCart(){
+      var box=document.getElementById("cartItems");
+      var total=cartTotal();
+      document.getElementById("total").textContent=money(total);
+      document.getElementById("floatTotal").textContent=money(total);
+      document.getElementById("floatCart").classList.toggle("show", cart.length>0);
+      document.getElementById("send").classList.toggle("hidden", cart.length===0);
+      document.getElementById("clearCart").classList.toggle("hidden", cart.length===0);
+
+      if(cart.length===0){
+        box.innerHTML='<p class="empty">Seu carrinho está vazio.</p>';
+        return;
+      }
+
+      var html="";
+      for(var i=0;i<cart.length;i++){
+        var item=cart[i];
+        var extras=item.extras.length ? item.extras.map(function(e){return e.name + (e.price ? " +" + money(e.price) : "");}).join(", ") : "Sem adicionais";
+        html += '<div class="cart-item">';
+        html += '<strong>'+(i+1)+'. '+item.produto+'</strong>';
+        if(item.sabor) html += '<p>Sabor: '+item.sabor+'</p>';
+        html += '<p>Acompanhamentos: '+extras+'</p>';
+        html += '<p>Quantidade: '+item.qty+'</p>';
+        html += '<p>Observação: '+(item.obs || "Nenhuma")+'</p>';
+        html += '<p><b>Total do item: '+money(item.total)+'</b></p>';
+        html += '<button class="remove" onclick="removeItem('+i+')">Remover item</button>';
+        html += '</div>';
+      }
+      box.innerHTML=html;
+    }
+    function sendOrder(){
+      if(cart.length===0){ alert("Adicione pelo menos um item ao carrinho."); return; }
+      var msg="Olá! Quero fazer um pedido da Tupã Energy.\\n\\n";
+      for(var i=0;i<cart.length;i++){
+        var item=cart[i];
+        var extras=item.extras.length ? item.extras.map(function(e){return e.name + (e.price ? " +" + money(e.price) : "");}).join(", ") : "Sem adicionais";
+        msg += "Item "+(i+1)+": "+item.produto+"\\n";
+        if(item.sabor) msg += "Sabor: "+item.sabor+"\\n";
+        msg += "Acompanhamentos: "+extras+"\\n";
+        msg += "Quantidade: "+item.qty+"\\n";
+        msg += "Observação: "+(item.obs || "Nenhuma")+"\\n";
+        msg += "Total do item: "+money(item.total)+"\\n\\n";
+      }
+      msg += "Total do pedido: "+money(cartTotal());
+      window.open("https://wa.me/"+WHATSAPP_NUMBER+"?text="+encodeURIComponent(msg),"_blank");
+    }
+    function changeQty(delta){
+      var input=document.getElementById("qty");
+      var n=parseInt(input.value||"1",10)+delta;
+      if(n<1)n=1;
+      input.value=n;
+    }
+
+    document.getElementById("menos").onclick=function(){changeQty(-1)};
+    document.getElementById("mais").onclick=function(){changeQty(1)};
+    document.getElementById("addToCart").onclick=addToCart;
+    document.getElementById("send").onclick=sendOrder;
+    document.getElementById("clearCart").onclick=clearCart;
+
+    var fields=document.querySelectorAll("input, textarea");
+    for(var i=0;i<fields.length;i++){
+      fields[i].addEventListener("change",showAfterStart);
+      fields[i].addEventListener("input",showAfterStart);
+    }
+    showAfterStart();
+    renderCart();
+  </script>
+</body>
+</html>
